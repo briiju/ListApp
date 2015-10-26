@@ -3,11 +3,11 @@ var myUsername = null;
 
 /*          Main page                  */
 // change pages
-$('.sidenavselect').click(function() {
+$('.side-nav-select').click(function() {
   var name = $(this).attr('data-target');
   console.log('showing ' + name);
-  $('.contentDivs').addClass('.notshown');
-  $('.sidenavselect').removeClass('active');
+  $('.content-div').addClass('.notshown');
+  $('.side-nav-select').removeClass('active');
   $(name).removeClass('.notshown');
   $(this).addClass('active');
 });
