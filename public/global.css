@@ -78,4 +78,6 @@ body {
 .main .page-header {
   margin-top: 0;
 }
-#submitmovie {padding-left: 30px; padding-right: 30px;}
+.alertify-logs {z-index: 9999;position: 'bottom-right';}
+#submit-movie {padding-left: 30px; padding-right: 30px;}
+#edit-movie {padding-left: 30px; padding-right: 30px;}

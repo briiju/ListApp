@@ -4,10 +4,12 @@
     <title>List Web App</title>
     <link href="./vendor/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="./vendor/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet">
-    <link href="./global.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="./vendor/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="./vendor/font-awesome/css/font-awesome.css"></script>
+    <link href="./vendor/font-awesome/css/font-awesome.css" rel="stylesheet"></script>
+    <script src="./vendor/alertify.js/src/js/alertify.js"></script>
+    <link href="./vendor/alertify.js/src/css/alertify.css" rel="stylesheet"></script>
+    <link href="./global.css" rel="stylesheet">
   </head>
 
   <body>
@@ -40,31 +42,33 @@
         <!-- Side navigation bar -->
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-          <li class="active side-nav-select" data-target="#Overview"><a href="#">Overview</a></li>
-          <li class="side-nav-select" data-target="#MovieList"><a href="#">Movie List <span class="sr-only">(current)</span></a></li>
+          <li class="active side-nav-select" data-target="#overview"><a href="#">Overview</a></li>
+          <li class="side-nav-select" data-target="#movie-list"><a href="#">Movie List <span class="sr-only">(current)</span></a></li>
           </ul>
         </div>
 
         <!-- Overview page container -->
-        <div class="content-div col-sm-8 col-sm-offset-3 col-md-9 col-md-offset-2 main" id="Overview">
+        <div class="content-div col-sm-8 col-sm-offset-3 col-md-9 col-md-offset-2 main" id="overview">
           <h1 class="page-header">Choose a page to view</h1>
         </div>
 
         <!-- Movie List page Container -->
-        <div class="notshown content-div col-sm-8 col-sm-offset-3 col-md-9 col-md-offset-2 main" id="MovieList">
+        <div class="notshown content-div col-sm-8 col-sm-offset-3 col-md-9 col-md-offset-2 main" id="movie-list">
           <h1 class="page-header">Movie List</h1>
           <div class="col-md-8 col-sm-6 col-md-offset-1 col-sm-offset-1 input-group">
             <span class="input-group-addon">Add Movie</span>
-            <input type="text" id="movienameinput" class="form-control" placeholder="New Movie Name" aria-describedby="movienameinput">
+            <input type="text" id="movie-name-input" class="form-control" placeholder="New Movie Name" aria-describedby="movie-name-input">
             <span class="input-group-btn">
-              <button id="submitmovie" type="button" class="btn btn-warning">+</button>
+              <button id="submit-movie" type="button" class="btn btn-warning">
+                <i class="fa fa-plus"></i>
+              </button>
               <button id="edit-movie" type="button" class="btn btn-info">
                 <i class="fa fa-pencil-square-o"></i>
               </button>
             </span>
           </div>
           <div class="col-md-11 table-responsive">
-            <table class="table table-striped table-hover" id="movietable">
+            <table class="table table-striped table-hover" id="movie-table">
               <thead>
                 <tr>
                   <th>#</th>

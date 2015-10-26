@@ -16,15 +16,20 @@ $('.side-nav-select').click(function() {
 /*           MovieList page             */
 
 // submit movie event
-$('#submitmovie').click(function () {
-  socket.emit('save movie', $('#movienameinput').val());
-  $('#movienameinput').val('');
+$('#submit-movie').click(function () {
+  var movieName = $('#movie-name-input').val();
+  if (!movieName){
+    alertify.error('Movie name cannot be blank');
+    return;
+  }
+  socket.emit('save movie', movieName);
+  $('#movie-name-input').val('');
   return false;
 });
 
 // Add a movie to the list
 socket.on('save entry', function(moviename){
-  var rownum = 1 + $('#movietable > tbody > tr').length;
+  var rownum = 1 + $('#movie-table > tbody > tr').length;
   var rowinfo = '<tr><td>' + rownum + '</td><td>' + moviename + '</td></tr>';
-  $('#movietable > tbody:last-child').append(rowinfo);
+  $('#movie-table > tbody:last-child').append(rowinfo);
 });
