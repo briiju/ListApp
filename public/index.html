@@ -55,17 +55,36 @@
         <!-- Movie List page Container -->
         <div class="notshown content-div col-sm-8 col-sm-offset-3 col-md-9 col-md-offset-2 main" id="movie-list">
           <h1 class="page-header">Movie List</h1>
-          <div class="col-md-8 col-sm-6 col-md-offset-1 col-sm-offset-1 input-group">
-            <span class="input-group-addon">Add Movie</span>
-            <input type="text" id="movie-name-input" class="form-control" placeholder="New Movie Name" aria-describedby="movie-name-input">
+          <!-- Add/Edit buttons -->
+          <div id="movie-add-edit" class="movie-input-group col-md-3 col-sm-4 col-md-offset-9 col-sm-offset-1 input-group">
             <span class="input-group-btn">
-              <button id="submit-movie" type="button" class="btn btn-warning">
+              <button type="button" class="btn btn-warning movie-option-button" data-target="#movie-add-menu">
                 <i class="fa fa-plus"></i>
               </button>
-              <button id="edit-movie" type="button" class="btn btn-info">
+              <button type="button" class="btn btn-info movie-option-button" data-target="#movie-edit-menu">
                 <i class="fa fa-pencil-square-o"></i>
               </button>
             </span>
+          </div>
+          <!-- Add menu -->
+          <div id="movie-add-menu" class="notshown movie-input-group col-md-10 col-sm-6 col-md-offset-1 col-sm-offset-1 input-group">
+            <span class="input-group-addon">Add Movie</span>
+            <input type="text" id="movie-name-input" class="form-control" placeholder="New Movie Name" aria-describedby="movie-name-input" />
+            <span class="input-group-btn">
+              <button id="submit-movie" type="button" class="btn btn-success">
+                <i class="fa fa-check"></i>
+              </button>
+              <button type="button" class="btn btn-danger movie-option-button" data-target="#movie-add-edit">
+                <i class="fa fa-close"></i>
+              </button>
+            </span>
+          </div>
+          <!-- Edit menu -->
+          <div id="movie-edit-menu" class="notshown movie-input-group col-md-8 col-sm-6 col-md-offset-1 col-sm-offset-1 input-group"><span class="input-group-btn">
+            <button type="button" class="btn btn-danger movie-option-button" data-target="#movie-add-edit">
+              <i class="fa fa-close"></i>
+            </button>
+          </span>
           </div>
           <div class="col-md-11 table-responsive">
             <table class="table table-striped table-hover" id="movie-table">

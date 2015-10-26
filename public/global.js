@@ -1,6 +1,18 @@
 var socket = io();
 var myUsername = null;
 
+$( document ).ready(function() {
+  alertify.defaults = {
+    // notifier defaults
+    notifier:{
+      // auto-dismiss wait time (in seconds)
+      delay:5,
+      // default position
+      position:'bottom-right'
+    }
+  };
+});
+
 /*          Main page                  */
 // change pages
 $('.side-nav-select').click(function() {
@@ -22,9 +34,17 @@ $('#submit-movie').click(function () {
     alertify.error('Movie name cannot be blank');
     return;
   }
+  $('.movie-input-group').addClass('notshown');
+  $('#movie-add-edit').removeClass('notshown');
   socket.emit('save movie', movieName);
   $('#movie-name-input').val('');
   return false;
+});
+$('.movie-option-button').click(function() {
+  var name = $(this).attr('data-target');
+  console.log('showing ' + name);
+  $('.movie-input-group').addClass('notshown');
+  $(name).removeClass('notshown');
 });
 
 // Add a movie to the list
