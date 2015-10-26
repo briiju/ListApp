@@ -6,9 +6,9 @@ var myUsername = null;
 $('.side-nav-select').click(function() {
   var name = $(this).attr('data-target');
   console.log('showing ' + name);
-  $('.content-div').addClass('.notshown');
+  $('.content-div').addClass('notshown');
   $('.side-nav-select').removeClass('active');
-  $(name).removeClass('.notshown');
+  $(name).removeClass('notshown');
   $(this).addClass('active');
 });
 
