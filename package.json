@@ -1,9 +1,13 @@
 {
-  "name": "socket-chat-example",
-  "version": "0.0.1",
-  "description": "my first socket.io app",
+  "name": "ListApp",
+  "version": "0.0.2",
+  "description": "Web application for storing information",
+  "private": "true",
   "dependencies": {
     "express": "^4.13.3",
+    "mongoose": "^4.2.4",
+    "passport": "^0.3.0",
+    "passport-google-oauth": "^0.2.0",
     "socket.io": "^1.3.7"
   }
 }

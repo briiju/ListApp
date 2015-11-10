@@ -1,0 +1,91 @@
+<!-- Movie List page Container -->
+<div class="col-sm-8 col-sm-offset-3 col-md-10 col-md-offset-2 main" id="movie-list">
+  <div align="center">
+    <h1 class="page-header">Movie List</h1>
+  </div>
+  <!-- Add/Edit buttons -->
+  <div ng-show="menu == 'add-edit'" class="col-md-9 col-sm-6 col-md-offset-1 col-sm-offset-1 input-group movie-input-group">
+    <span class="btn-group pull-right">
+      <button type="button" class="btn btn-warning movie-option-button" ng-click="changeMenu('add')">
+        <i class="fa fa-plus"></i>
+      </button>
+      <button type="button" class="btn btn-info movie-option-button" ng-click="changeMenu('edit')">
+        <i class="fa fa-pencil-square-o"></i>
+      </button>
+    </span>
+  </div>
+  <!-- Add menu -->
+  <div ng-show="menu == 'add'" class="col-md-9 col-sm-6 col-md-offset-1 col-sm-offset-1 input-group movie-input-group">
+    <span class="input-group-addon">Add Movie</span>
+    <input type="text" id="movie-name-input" class="form-control" placeholder="New Movie Name" aria-describedby="movie-name-input" />
+    <span class="input-group-btn">
+      <button id="submit-movie" type="button" class="btn btn-success">
+        <i class="fa fa-check"></i>
+      </button>
+      <button type="button" class="btn btn-danger movie-option-button"  ng-click="changeMenu('add-edit')">
+        <i class="fa fa-close"></i>
+      </button>
+    </span>
+  </div>
+  <!-- Edit menu -->
+  <div ng-show="menu == 'edit'" class="col-md-9 col-sm-6 col-md-offset-1 col-sm-offset-1 input-group movie-input-group">
+    <span class="btn-group pull-right">
+      <button type="button" class="btn btn-danger movie-option-button" ng-click="changeMenu('add-edit')">
+        <i class="fa fa-close"></i>
+      </button>
+    </span>
+  </div>
+  <div class="col-md-12 table-responsive">
+    <table class="table table-striped table-hover" id="movie-table">
+      <thead>
+        <tr>
+          <th class="col-md-1">#</th>
+          <th class="col-md-9">Title</th>
+          <th class="col-md-2">Added by</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="movie in mongoStuff">
+          <td>#</td>
+          <td>{{movie.name}}</td>
+          <td>{{movie.addedBy}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<script>
+/*           MovieList page             */
+
+// submit movie event
+$('#submit-movie').click(function () {
+  var movieName = $('#movie-name-input').val();
+  if (!movieName){
+    alertify.error('Movie name cannot be blank');
+    return;
+  }
+  $('.movie-input-group').addClass('notshown');
+  $('#movie-add-edit').removeClass('notshown');
+  socket.emit('save movie', movieName);
+  $('#movie-name-input').val('');
+  return false;
+});
+/*
+$('.movie-option-button').click(function() {
+  var name = $(this).attr('data-target');
+  if (name = "#movie-edit-menu") {
+    alertify.success("This doesn't do anything yet");
+    return;
+  }
+  console.log('showing ' + name);
+  $('.movie-input-group').addClass('notshown');
+  $(name).removeClass('notshown');
+});
+*/
+// Add a movie to the list
+socket.on('save entry', function(moviename){
+  var rownum = 1 + $('#movie-table > tbody > tr').length;
+  var rowinfo = '<tr><td>' + rownum + '</td><td>' + moviename + '</td></tr>';
+  $('#movie-table > tbody:last-child').append(rowinfo);
+});
+</script>
