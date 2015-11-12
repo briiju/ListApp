@@ -1,3 +1,6 @@
+/*
+    Dependencies
+*/
 var express          = require( 'express' )
 var app              = express()
 var http             = require( 'http' ).Server(app);
@@ -12,8 +15,14 @@ var io               = require( 'socket.io' )(http);
 var movieDB          = require( 'mongoose' );
 //var User             = require( './user' );
 var Movie            = require( './models/movie' );
+var moment           = require( 'moment' );
 
-movieDB.connect('mongodb://localhost/ListApp')
+/*
+    Configure
+*/
+
+//connect mongoose database
+movieDB.connect('mongodb://localhost/movies')
 
 // configure Express
 app.use( express.static(__dirname + '/public'));
@@ -22,6 +31,8 @@ app.get('/', function(req, res){
   res.render('index.html');
 });
 
+//use REST to  serve mongodb info
+/*
 app.get('/movie-list', function(req, res) {
   Movie.find(function (err, movies) {
     if (err) {
@@ -30,16 +41,52 @@ app.get('/movie-list', function(req, res) {
     res.json(movies);
   });
 })
+*/
+
+//socket functions
+io.on('connection', function(socket){
+  //Log when a client connects and send them the movie list
+  console.log('user opened movie-list');
+
+  var sendthemovies = function (target) {
+    Movie.find(function (err, movies) {
+      console.log('sending movie list');
+      var movielist = JSON.stringify(movies);
+      movielist = JSON.parse(movielist);
+      if (target = 'socket'){
+        socket.emit('sendingmovielist', movielist);
+      } else {
+        io.emit('sendingmovielist', movielist);
+      }
+    })
+  };
+  sendthemovies('socket');
+  //save movie from client
+  socket.on('sendmovie', function(data){
+    var newmoviename = data.movieName;
+    var newaddedby = data.addedBy;
+    console.log('user ' + newaddedby + ' is attempting to save movie ' + newmoviename);
+    //save the movie
+    var newMovie = Movie({
+      movieName    : newmoviename,
+      addedBy      : newaddedby,
+      addedOn      : moment(),
+      watched      : false,
+      watchedOn    : moment()
+    })
+    newMovie.save(function(err) {
+      if (err) console.log(err);
+      console.log('movie saved!')
+    })
+    //send the movie list
+    sendthemovies('io');
+  });
+});
+
+/*
+    Start server
+*/
 
 http.listen(3000, function(){
   console.log('listening on *:3000');
-});
-
-io.on('connection', function(socket){
-  //When the user connects, ask for their name
-  console.log('user opened page')
-  //When the user presses send, send their message
-  socket.on('save movie', function(moviename){
-    io.emit('save entry', moviename);
-  });
 });

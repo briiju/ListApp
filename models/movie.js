@@ -1,12 +1,17 @@
 var mongoose         = require( 'mongoose' );
 
-// define the schema for our user model
+// define the schema for our movie model
 var movieSchema = mongoose.Schema({
 
-        name         : String,
-        addedBy      : String
+        movieName    : String,
+        addedBy      : String,
+        addedOn      : { type: Date, default: Date.now },
+        watched      : { type: Boolean, default: false },
+        watchedOn    : Date
 
 });
 
-// create the model for users and expose it to our app
-module.exports = mongoose.model('Movie', movieSchema);
+var Movie = mongoose.model('Movie', movieSchema);
+
+// expose the movie model
+module.exports = Movie;
