@@ -44,15 +44,9 @@ listAppControllers.controller('movie-list-controller', ['$scope', '$filter', 'mo
 }]);
 
 listAppControllers.controller('movie-search-controller', ['$http', '$scope', function($http, $scope) {
-  //$scope.url = "http://www.omdbapi.com/?t=big%20hero&y=&plot=short&r=json"
-
-  $scope.searchMovie = function () {
-
-    //$http.get("http://www.omdbapi.com/?t=big+hero&y=&plot=short&r=json").success(function(data) {
-    $http.get("https://angularjs.org/greet.php?callback=JSON_CALLBACK&name=Super%20Hero").success(function(data) {
-      console.log(data);
-    });
-  }
+  //Planned on using this controller to query an IMDb API or something in order to test
+  //  movie search capabilities. Apparently that's actually illegal...
+  //Waiting on a license for an open movie db to go through
 }]);
 
 listAppControllers.factory('movieQueries', function ($rootScope) {
