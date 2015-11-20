@@ -4,6 +4,7 @@
 /*          Controllers                */
 
 var angularListApp = angular.module('angularListApp', [
+  'angularMoment',
   'ngRoute',
   'listAppControllers'
 ]);
@@ -22,6 +23,11 @@ angularListApp.config(['$routeProvider',
         templateUrl: 'partials/movie-list.html',
         controller: 'movie-list-controller',
         activetab: 'movie-list'
+      }).
+      when('/movie-search', {
+        templateUrl: 'partials/movie-search.html',
+        //controller: 'movie-search-controller',
+        activetab: 'movie-search'
       }).
       otherwise(
         {redirectTo: '/overview'}

@@ -48,15 +48,17 @@ io.on('connection', function(socket){
   //Log when a client connects and send them the movie list
   console.log('user opened movie-list');
 
-  var sendthemovies = function (target) {
+  sendthemovies = function (target) {
     Movie.find(function (err, movies) {
-      console.log('sending movie list');
+      //console.log('sending movie list, target: ' + target);
       var movielist = JSON.stringify(movies);
       movielist = JSON.parse(movielist);
-      if (target = 'socket'){
+      if (target == 'socket'){
+        //console.log('sending movies over socket');
         socket.emit('sendingmovielist', movielist);
-      } else {
-        io.emit('sendingmovielist', movielist);
+      } else if (target == 'io') {
+        //console.log('sending movies over io');
+        io.sockets.emit('sendingmovielist', movielist);
       }
     })
   };
@@ -65,7 +67,6 @@ io.on('connection', function(socket){
   socket.on('sendmovie', function(data){
     var newmoviename = data.movieName;
     var newaddedby = data.addedBy;
-    console.log('user ' + newaddedby + ' is attempting to save movie ' + newmoviename);
     //save the movie
     var newMovie = Movie({
       movieName    : newmoviename,

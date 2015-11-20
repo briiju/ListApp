@@ -64,6 +64,14 @@ body {
 .alertify-logs {z-index: 9999;}
 #submit-movie {width: 70px;}
 #edit-movie {width: 70px;}
+#search-movie {width: 70px;}
+#movie-sort-by {margin-right: 10px;}
 .movie-option-button {
   width: 70px !important;
+}
+.fa-eye {
+  color: rgb(100, 100, 100);
+}
+.fa-eye-slash {
+  color: rgb(66, 139, 202);
 }
