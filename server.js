@@ -62,7 +62,6 @@ io.on('connection', function(socket){
       }
     })
   };
-  sendthemovies('socket');
   //save movie from client
   socket.on('sendmovie', function(data){
     var newmoviename = data.movieName;
@@ -80,6 +79,10 @@ io.on('connection', function(socket){
       console.log('movie saved!')
     })
     //send the movie list
+    sendthemovies('io');
+  });
+
+  socket.on('requestmovies', function(data) {
     sendthemovies('io');
   });
 });

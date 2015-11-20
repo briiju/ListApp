@@ -5,8 +5,9 @@ listAppControllers.controller('sidenav-controller', ['$scope', '$route',function
   $scope.$route = $route;
 }]);
 
-listAppControllers.controller('movie-list-controller', ['$scope', '$filter', 'movieQueries', function($scope, $filter, movieQueries) {
+listAppControllers.controller('movie-list-controller', ['$scope', '$filter', 'movieQueries', '$rootScope', function($scope, $filter, movieQueries, $rootScope) {
   //handle menu changes
+  //console.log('initializing movie list controller');
   $scope.menu = 'add-edit'
   $scope.changeMenu = function(newmenu) {
     $scope.menu = newmenu;
@@ -19,17 +20,24 @@ listAppControllers.controller('movie-list-controller', ['$scope', '$filter', 'mo
   };
   $scope.order('', false);
   $scope.now = new Date();
+
   //handle movie queries
   $scope.movies = {};
   $scope.moviename = '';
+
+  movieQueries.emit('requestmovies');
+
   movieQueries.on('sendingmovielist', function(movies) {
     $scope.movies = movies
+    //console.log('getting movies from server');
   });
   $scope.sendMovie = function () {
+  //console.log('preparing to send movie to server');
     movieQueries.emit('sendmovie', {
       movieName: $scope.moviename,
       addedBy:   'user'
     });
+    //console.log('sending movie to server');
     $scope.moviename = '';
     $scope.menu = 'add-edit';
   };
