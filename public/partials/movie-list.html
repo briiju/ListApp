@@ -1,38 +1,51 @@
 <!-- Movie List page Container -->
-<div class="col-sm-11 col-sm-offset-4 col-md-10 col-md-offset-2 main" id="movie-list">
+<div class="col-sm-12 col-md-10 col-md-offset-2 main" id="movie-list">
   <div align="center">
     <h1 class="page-header">Movie List</h1>
+    <nav>
+      <ul class="pagination">
+        <li ng-class="{active: movieTab == 'fullMovieList'}" ng-click="changeTab('fullMovieList')">
+          <a>Full Movie List</a>
+        </li>
+        <li ng-class="{active: movieTab == 'randomMovieSelector'}" ng-click="changeTab('randomMovieSelector')">
+          <a>Random Movie</a>
+        </li>
+        <li ng-class="{active: movieTab == 'movieFilter'}" ng-click="changeTab('movieFilter')">
+          <a>Movie Filter</a>
+        </li>
+      </ul>
+    </nav>
   </div>
-  <div class='panel panel-default'>
+  <!-- full movie list -->
+  <div class='panel panel-default' ng-show="movieTab == 'fullMovieList'">
     <div class='panel-heading'>
       <!-- Add/Edit buttons -->
-      <div ng-show="menu == 'add-edit'" class="col-md-10 col-sm-10 col-md-offset-1 col-sm-offset-1 input-group movie-input-group">
+      <div ng-show="menu == 'add-edit'" class="col-md-11 col-sm-12 col-xs-12 input-group movie-input-group">
         <span class="btn-group pull-right">
           <button type="button" class="btn btn-success movie-option-button" ng-click="changeMenu('add')">
             <i class="fa fa-plus"></i>
           </button>
-          <button type="button" class="btn btn-warning movie-option-button" ng-click="changeMenu('edit')">
-            <i class="fa fa-pencil-square-o"></i>
-          </button>
         </span>
-        <div class="btn-group pull-right" id="movie-sort-by">
-          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <div class="pull-right movie-sort-by" click-off="closeDropdown('#m-dropdown')">
+          <button id="m-label" type="button" class="btn btn-default" ng-click="toggleDropdown($event)" data-target="#m-dropdown" aria-haspopup="true" aria-expanded="false">
             <b>Sort by </b><span class="caret"></span>
           </button>
-          <ul class="dropdown-menu">
-            <li><a href="" ng-click="order('_id', false)">Don't sort</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="" ng-click="order('movieName', false)">Alphabetical (A-Z)</a></li>
-            <li><a href="" ng-click="order('movieName', true)">Alphabetical (Z-A)</a></li>
-            <li><a href="" ng-click="order('dateAdded', false)">Date Added (oldest first)</a></li>
-            <li><a href="" ng-click="order('dateAdded', true)">Date Added (newest first)</a></li>
-          </ul>
+          <div id="m-dropdown" class="panel panel-default menu-dropdown">
+            <div class="panel-body">
+              <ul>
+                <li><a href="" ng-click="order('_id', false)">Don't sort</a></li>
+                <li><a href="" ng-click="order('movieName', false)">Alphabetical (A-Z)</a></li>
+                <li><a href="" ng-click="order('movieName', true)">Alphabetical (Z-A)</a></li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
       <!-- Add menu -->
-      <div ng-show="menu == 'add'" class="col-md-10 col-sm-10 col-md-offset-1 col-sm-offset-1 input-group movie-input-group">
+      <div ng-show="menu == 'add'" class="col-md-10 col-sm-12 col-md-offset-1 col-sm-offset-1 input-group movie-input-group">
         <span class="input-group-addon">Add Movie</span>
-        <input type="text" id="movie-name-input" ng-model="moviename" class="form-control" aria-describedby="movie-name-input" />
+        <input type="text" ng-model="moviename" class="form-control" aria-describedby="movie-name-input" placeholder="Movie Name" />
+        <input type="text" ng-model="addedby" class="form-control" aria-describedby="user-name-input" placeholder="Who added this movie? (temporary)"/>
         <span class="input-group-btn">
           <button id="submit-movie" type="button" class="btn btn-success" ng-click="sendMovie()">
             <i class="fa fa-check"></i>
@@ -42,30 +55,123 @@
           </button>
         </span>
       </div>
-      <!-- Edit menu -->
-      <div ng-show="menu == 'edit'" class="col-md-10 col-sm-10 col-md-offset-1 col-sm-offset-1 input-group movie-input-group">
-        <span class="btn-group pull-right">
-          <button type="button" class="btn btn-danger movie-option-button" ng-click="changeMenu('add-edit')">
-            <i class="fa fa-close"></i>
-          </button>
-        </span>
-      </div>
     </div>
-    <!-- table -->
+    <!-- Movie table -->
     <div class='panel-body'>
       <div class="col-md-12 table-responsive">
         <table class="table table-striped table-hover" id="movie-table">
           <thead>
             <tr>
-              <th class="">#</th>
-              <th class="">Seen?</th>
-              <th class="">Title</th>
-              <th class="">Added by</th>
-              <th class="">Added on</th>
+              <th>#</th>
+              <th>Seen?</th>
+              <th>Title</th>
+              <th>Added by</th>
+              <th ng-show="movieToEdit == ''">Added on</th>
             </tr>
           </thead>
           <tbody>
             <tr ng-repeat="movie in movies">
+              <!-- index/edit column -->
+              <td>
+                <div class="btn-group">
+                  <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{$index + 1}} <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li><a>See more</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li><a ng-click="enableEdits(movie._id)">{{movie._id == movieToEdit ? 'Cancel Edits' : 'Edit'}}</a></li>
+                    <li ng-show="movie._id == movieToEdit" ng-click="changeMovieParameter(movie._id)"><a>Accept Edits</a></li>
+                  </ul>
+                </div>
+              </td>
+              <!-- end index column -->
+              <!-- watched column -->
+              <td>
+                <i ng-class="movie.watched ? 'fa-eye' : 'fa-eye-slash'" class="fa"></i>
+              </td>
+              <!-- end watched column -->
+              <!-- movie title column -->
+              <td ng-show="movieToEdit != movie._id">
+                {{movie.movieName}}
+              </td>
+              <td ng-show="movieToEdit == movie._id">
+                <div class="input-group">
+                  <span class="input-group-addon">{{movie.movieName}}</span>
+                  <input type="text" class="form-control" aria-describedby="movie-name-input" />
+                </div>
+              </td>
+              <!-- end movie title column -->
+              <!-- added by column -->
+              <td ng-show="movieToEdit != movie._id">
+                {{movie.addedBy}}
+              </td>
+              <td ng-show="movieToEdit == movie._id">
+                <div class="input-group">
+                  <span class="input-group-addon">{{movie.addedBy}}</span>
+                  <input type="text" class="form-control" aria-describedby="movie-name-input" />
+                </div>
+              </td>
+              <!-- end added by column -->
+              <td ng-show="movieToEdit == ''">
+                {{movie.addedOn | amDateFormat:'MM-DD-YYYY HH:mm:ss'}}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <!-- random movie selector -->
+  <div class='panel panel-default' ng-show="movieTab == 'randomMovieSelector'">
+    <div class='panel-heading'>
+      <div class='input-group col-md-11 col-sm-12 col-xs-12'>
+        <span class="btn-group pull-right">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b>{{randomWatchedFilter}} </b><span class="caret"></span></button>
+          <ul class="dropdown-menu">
+            <li><a ng-click="randomWatchedFilter = 'Watched'">Watched</a></li>
+            <li><a ng-click="randomWatchedFilter = 'Not Watched'">Not Watched</a></li>
+            <li><a ng-click="randomWatchedFilter = 'Both'">Both</a></li>
+          </ul>
+          <button type="button" class="btn btn-success" ng-click="getRandomMovie()" id="random-movie">
+            <i class="fa fa-refresh"></i>
+          </button>
+        </span>
+      </div>
+    </div>
+    <div class='panel-body' ng-show="randomMovieResult != ''">
+      <a><b>Randomly Selected Movie: </b>{{randomMovieResult}}</a>
+    </div>
+  </div>
+  <!-- filter movies -->
+  <div class='panel panel-default' ng-show="movieTab == 'movieFilter'">
+    <div class='panel-heading'>
+      <div>
+        <div class='input-group'>
+          <div class="input-group-addon">Name</div>
+          <input type="text" ng-model="search.movieName" class="form-control"/>
+        </div>
+        <div class='input-group'>
+          <div class="input-group-addon">Added By</div>
+          <input type="text" ng-model="search.addedBy" class="form-control"/>
+        </div>
+      </div>
+    </div>
+    <div class='panel-body'>
+      <div class="col-md-12 table-responsive">
+        <table class="table table-striped table-hover" id="movie-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Seen?</th>
+              <th>Title</th>
+              <th>Added by</th>
+              <th>Added on</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="movie in movies | filter:search">
+              <!-- index/edit column -->
               <td>{{$index + 1}}</td>
               <td><i ng-class="movie.watched ? 'fa-eye' : 'fa-eye-slash'" class="fa"></i></td>
               <td>{{movie.movieName}}</td>
@@ -80,29 +186,3 @@
 </div>
 <script src=  "../vendor/moment/moment.js"></script>
 <script src=  "../vendor/angular-moment/angular-moment.js"></script>
-<script>
-/*           MovieList page             */
-
-//this is all moving to controller
-/*
-// submit movie event
-$('#submit-movie').click(function () {
-  var movieName = $('#movie-name-input').val();
-  if (!movieName){
-    alertify.error('Movie name cannot be blank');
-    return;
-  }
-  $('.movie-input-group').addClass('notshown');
-  $('#movie-add-edit').removeClass('notshown');
-  socket.emit('save movie', movieName);
-  $('#movie-name-input').val('');
-  return false;
-});
-// Add a movie to the list
-socket.on('save entry', function(moviename){
-  var rownum = 1 + $('#movie-table > tbody > tr').length;
-  var rowinfo = '<tr><td>' + rownum + '</td><td>' + moviename + '</td></tr>';
-  $('#movie-table > tbody:last-child').append(rowinfo);
-});
-*/
-</script>

@@ -1,96 +1,52 @@
-/*
-    Dependencies
-*/
+/* Dependencies */
+
 var express          = require( 'express' )
 var app              = express()
 var http             = require( 'http' ).Server(app);
-//var passport         = require( 'passport' )
+var passport         = require( 'passport' )
 var util             = require( 'util' )
 var bodyParser       = require( 'body-parser' )
-//var cookieParser     = require( 'cookie-parser' )
-//var session          = require( 'express-session' )
-//var RedisStore       = require( 'connect-redis' )( session )
-//var GoogleStrategy   = require( 'passport-google-oauth2' ).Strategy;
-var io               = require( 'socket.io' )(http);
+var cookieParser     = require( 'cookie-parser' )
+var session          = require( 'express-session' )
+var RedisStore       = require( 'connect-redis' )( session )
 var movieDB          = require( 'mongoose' );
-//var User             = require( './user' );
-var Movie            = require( './models/movie' );
-var moment           = require( 'moment' );
 
-/*
-    Configure
-*/
+/* Configure */
 
 //connect mongoose database
 movieDB.connect('mongodb://localhost/movies')
 
+// configure passport
+var pass             = require( './lib/passport.js' )(passport);
+
 // configure Express
 app.use( express.static(__dirname + '/public'));
+app.use( cookieParser());
+app.use( bodyParser.json());
+app.use( bodyParser.urlencoded({
+	extended: true
+}));
+app.use( session({
+	secret: 'cookie_secret',
+	name:   'kaas',
+	store:  new RedisStore({
+		host: '127.0.0.1',
+		port: 6379
+	}),
+	proxy:  true,
+  resave: true,
+  saveUninitialized: true
+}));
+app.use( passport.initialize());
+app.use( passport.session());
 
-app.get('/', function(req, res){
-  res.render('index.html');
-});
+// get routes
+require( './lib/routes.js' )(app, passport);
 
-//use REST to  serve mongodb info
-/*
-app.get('/movie-list', function(req, res) {
-  Movie.find(function (err, movies) {
-    if (err) {
-      res.send(err);
-    }
-    res.json(movies);
-  });
-})
-*/
+// get socket functions
+var socket           = require('./lib/socket.js')(http);
 
-//socket functions
-io.on('connection', function(socket){
-  //Log when a client connects and send them the movie list
-  console.log('user opened movie-list');
-
-  sendthemovies = function (target) {
-    Movie.find(function (err, movies) {
-      //console.log('sending movie list, target: ' + target);
-      var movielist = JSON.stringify(movies);
-      movielist = JSON.parse(movielist);
-      if (target == 'socket'){
-        //console.log('sending movies over socket');
-        socket.emit('sendingmovielist', movielist);
-      } else if (target == 'io') {
-        //console.log('sending movies over io');
-        io.sockets.emit('sendingmovielist', movielist);
-      }
-    })
-  };
-  //save movie from client
-  socket.on('sendmovie', function(data){
-    var newmoviename = data.movieName;
-    var newaddedby = data.addedBy;
-    //save the movie
-    var newMovie = Movie({
-      movieName    : newmoviename,
-      addedBy      : newaddedby,
-      addedOn      : moment(),
-      watched      : false,
-      watchedOn    : moment()
-    })
-    newMovie.save(function(err) {
-      if (err) console.log(err);
-      console.log('movie saved!')
-    })
-    //send the movie list
-    sendthemovies('io');
-  });
-
-  socket.on('requestmovies', function(data) {
-    sendthemovies('io');
-  });
-});
-
-/*
-    Start server
-*/
-
+/* Start server */
 http.listen(3000, function(){
   console.log('listening on *:3000');
 });

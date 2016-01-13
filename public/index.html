@@ -3,11 +3,12 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>EggPlant</title>
+    <link   rel="icon" type="image/png" href="./img/eggplant-icon.png">
     <link   href= "./vendor/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link   href= "./vendor/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet">
-    <script src=  "./vendor/jquery/dist/jquery.min.js"></script>
-    <script src=  "./vendor/angular/angular.min.js"></script>
-    <script src=  "./vendor/angular-route/angular-route.min.js"></script>
+    <script src=  "./vendor/jquery/dist/jquery.js"></script> <!-- minimize this package -->
+    <script src=  "./vendor/angular/angular.js"></script> <!-- minimize this package -->
+    <script src=  "./vendor/angular-route/angular-route.js"></script> <!-- minimize this package -->
     <script src=  "./vendor/bootstrap/dist/js/bootstrap.min.js"></script>
     <link   href= "./vendor/font-awesome/css/font-awesome.css" rel="stylesheet"></script>
     <script src=  "./vendor/alertify.js/src/js/alertify.js"></script>
@@ -15,17 +16,19 @@
     <link   href= "./global.css" rel="stylesheet">
     <script src=  "https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script src=  "./global.js"></script>
+    <script src=  "./vendor/dynamics.js/lib/dynamics.js"></script>
     <script src=  "./controllers.js"></script>
     <script src=  "./vendor/moment/moment.js"></script>
     <script src=  "./vendor/angular-moment/angular-moment.js"></script>
   </head>
 
-  <body ng-app="angularListApp">
+  <body ng-app="angularListApp" ng-controller="ui-controller">
     <!-- Top navigation bar -->
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
+        <!-- Toggle nav button -->
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="dropdown" data-target="#sidebar-container" aria-expanded="false" aria-controls="navbar">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -35,9 +38,25 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a>Settings</a></li>
-            <li><a>Profile</a></li>
-            <li><a>Help</a></li>
+            <!-- profile -->
+            <li>
+              <div id="p-dropdown" class="panel panel-default menu-dropdown">
+                <div class="panel-body">
+                  <ul>
+                    <li>Profile stuff goes here</li>
+                    <li id="google-button" ng-init="imgsrc='./img/btn_google_signin_light_normal_web.png'"
+                      ng-mouseover="imgsrc='./img/btn_google_signin_light_focus_web.png'" ng-mouseout="imgsrc='./img/btn_google_signin_light_normal_web.png'">
+                      <img href="/auth/google" ng-src="{{imgsrc}}"/>
+                    </li>
+                    <li>Logins are temporarily disabled</li>
+                  </ul>
+                </div>
+              </div>
+              <a id="p-label" ng-click="toggleDropdown($event)" click-off="closeDropdown('#p-dropdown')" data-target="#p-dropdown" aria-haspopup="true" aria-expanded="false">
+                Profile
+                <span class="caret"></span>
+              </a>
+            </li>
           </ul>
         </div>
       </div>
@@ -48,11 +67,13 @@
       <div class="row">
 
         <!-- Side navigation bar -->
-        <div class="col-sm-3 col-md-2 sidebar" ng-controller="sidenav-controller">
+        <div id="sidebar-container" class="col-sm-3 col-md-2 sidebar collapse">
           <ul class="nav nav-sidebar">
             <li ng-class="{active: $route.current.activetab == 'overview'}"><a href="#/overview">Overview</a></li>
             <li ng-class="{active: $route.current.activetab == 'movie-list'}"><a href="#/movie-list">Movie List</a></li>
             <li ng-class="{active: $route.current.activetab == 'movie-search'}"><a href="#/movie-search">Movie Search</a></li>
+            <li ng-class="{active: $route.current.activetab == 'settings'}"><a href="#/settings">Settings</a></li>
+            <li ng-class="{active: $route.current.activetab == 'login'}"><a href="#/login">Log In</a></li>
           </ul>
         </div>
 

@@ -2,15 +2,76 @@ body {
   padding-top: 50px;
 }
 
-/* Topbar navigation */
+/*--------------Topbar navigation---------------------*/
 .navbar-fixed-top {
   border: 0;
 }
+.navbar-right {
+  cursor: pointer;
+}
 
-/* Hide for mobile, show later */
+.menu-dropdown {
+  position: absolute;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 0;
+  -webkit-transform-origin: 50% 10px;
+  -moz-transform-origin: 50% 10px;
+  transform-origin: 50% 10px;
+  -webkit-transform: scale(.1);
+  transform: scale(.1);
+  opacity: 0;
+  box-shadow: 10px 5px 5px grey;
+}
+#p-dropdown {
+  top: 55px;
+  width: 243px;
+  left: -170px;
+}
+#m-dropdown {
+  width: 243px;
+  z-index: 1000;
+  top: 39px;
+}
+#m-dropdown div ul {
+  margin-bottom: 0px;
+}
+#m-dropdown div ul li a {
+  font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  color: rgb(51, 51, 51);
+  list-style: none;
+  overflow: hidden;
+  padding-left: 0px;
+}
+#m-dropdown div ul li a:hover {
+  color: rgb(66, 139, 202);
+}
+#google-button {
+  height: 46px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+.menu-dropdown ul {
+  font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  color: rgb(51, 51, 51);
+  list-style: none;
+  overflow: hidden;
+  padding-left: 0px;
+}
+.menu-dropdown div ul li {
+  height: 25px;
+  width: auto;
+}
+.menu-dropdown ul li:hover {
+  color: rgb(66, 139, 202);
+}
+
+/* Hide the sidebar */
 .sidebar {
   display: none;
 }
+/* show the sidebar if not mobile */
 @media (min-width: 768px) {
   .sidebar {
     position: fixed;
@@ -27,7 +88,7 @@ body {
   }
 }
 
-/* Sidebar navigation */
+/*--------------Sidebar navigation--------------------*/
 .nav-sidebar {
   margin-right: -21px; /* 20px padding + 1px border */
   margin-bottom: 20px;
@@ -44,7 +105,7 @@ body {
   background-color: #428bca;
 }
 
-/* Main content */
+/*--------------Main Content--------------------------*/
 
 .main {
   padding: 20px;
@@ -62,10 +123,11 @@ body {
   margin-top: 0;
 }
 .alertify-logs {z-index: 9999;}
-#submit-movie {width: 70px;}
-#edit-movie {width: 70px;}
-#search-movie {width: 70px;}
-#movie-sort-by {margin-right: 10px;}
+#submit-movie, #edit-movie, #search-movie, #random-movie {width: 70px;}
+.movie-sort-by {
+  margin-right: 10px;
+  color: rgb(51, 51, 51) !important;
+}
 .movie-option-button {
   width: 70px !important;
 }
@@ -74,4 +136,10 @@ body {
 }
 .fa-eye-slash {
   color: rgb(66, 139, 202);
+}
+td {
+  vertical-align: middle !important;
+}
+.pagination {
+  margin-top: 0px;
 }

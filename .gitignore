@@ -1,3 +1,5 @@
 passport-archive.js
+lib/gAuth.js
 public/vendor/
 node_modules/
+ideas/
